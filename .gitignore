@@ -1,4 +1,6 @@
 venv/
-media/
 __pycache__/
 .DS_Store
+media/texts/
+media/images/
+media/**/partial_movie_files/
