@@ -34,7 +34,7 @@ pip install -r requirements.txt
 ```bash
 manim checkhealth   
 ```
-![Compilacion 1080p60]()
+![Compilacion 1080p60](assets/verificando_instalacion.png)
 
 
 ### Compilando el video de avance
