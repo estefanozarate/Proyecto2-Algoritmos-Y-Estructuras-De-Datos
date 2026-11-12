@@ -18,3 +18,12 @@ Proyecto 2 · CS2023 Algoritmos y Estructuras de Datos · UTEC
 - Cálculo de tamaños de subárbol con DFS iterativo
 - Búsqueda del centroide bajando hacia el hijo más pesado
 - Complejidad O(n) frente al método ingenuo O(n²)
+
+## Proceso de compilación del video
+### Creando entorno virtual para instalar la libreria manim
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+![Compilacion 1080p60](assets/install_manim.png)
