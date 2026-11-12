@@ -19,6 +19,8 @@ Proyecto 2 · CS2023 Algoritmos y Estructuras de Datos · UTEC
 - Búsqueda del centroide bajando hacia el hijo más pesado
 - Complejidad O(n) frente al método ingenuo O(n²)
 
+
+
 ## Proceso de compilación del video
 ### Creando entorno virtual para instalar la libreria manim
 ```bash
@@ -27,3 +29,26 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 ![Compilacion 1080p60](assets/install_manim.png)
+
+### Verificando la instalación de la libreria manim
+```bash
+manim checkhealth   
+```
+![Compilacion 1080p60](assets/verificando_instalacion.png)
+
+
+### Compilando el video de avance
+```bash
+manim -pql avance.py   
+```
+![Compilacion 1080p60](assets/compilando_video.png)
+
+
+### Ruta de destino del video una vez compilado
+`/media/videos/avance/480p15 Avance.mp4` 
+![Compilacion 1080p60](assets/video_renderizado.png)
+
+
+
+
+
