@@ -19,8 +19,6 @@ Proyecto 2 · CS2023 Algoritmos y Estructuras de Datos · UTEC
 - Búsqueda del centroide bajando hacia el hijo más pesado
 - Complejidad O(n) frente al método ingenuo O(n²)
 
-
-
 ## Proceso de compilación del video
 ### Creando entorno virtual para instalar la libreria manim
 ```bash
