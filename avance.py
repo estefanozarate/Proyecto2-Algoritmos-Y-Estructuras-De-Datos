@@ -1,16 +1,8 @@
 """Proyecto 2 · Centroide de un árbol · Avance (≈25 % del video).
-
-Un solo archivo: solo necesita Manim Community (sin LaTeX).
-
     manim -pql avance.py    # vista previa rápida (480p)
     manim -pqh avance.py    # final 1080p60
-
 El archivo tiene una sola escena (Avance), así que Manim la renderiza completa
 sin preguntar.
-
-La animación la impulsa una implementación real: `encontrar_centroides` ejecuta
-el algoritmo (DFS iterativo + bajada al hijo pesado) y registra cada paso en una
-lista de eventos; las escenas solo dibujan esos eventos.
 """
 
 import sys
@@ -22,9 +14,6 @@ from manim import (BOLD, DOWN, LEFT, ORIGIN, RIGHT, UL, UP, WHITE, AnimationGrou
                    ImageMobject, Indicate, LaggedStart, Line, RoundedRectangle, Scene,
                    ShowPassingFlash, Square, Text, VGroup, Write, config)
 
-# =============================================================================
-# Configuración
-# =============================================================================
 TITULO = "Centroide de un árbol"
 SUBTITULO = "Proyecto 2 · CS2023 Algoritmos y Estructuras de Datos"
 CICLO = "UTEC · 2026-2"
@@ -32,7 +21,6 @@ AUTORES = ["Estefano Zárate"]
 PROFESOR = "Luciano A. Romero Calla"
 LOGO = Path(__file__).resolve().parent / "assets" / "UTEC_Logo.png"  # opcional
 
-# Árbol de ejemplo (nodos 1..N). Con raíz 1 el algoritmo baja 1 -> 2 -> 4.
 N = 13
 ARISTAS = [(1, 2), (1, 3), (2, 4), (2, 5), (4, 6), (4, 7), (4, 8),
            (5, 9), (6, 10), (7, 11), (8, 12), (8, 13)]
