@@ -13,26 +13,23 @@ from manim import (BOLD, DOWN, LEFT, ORIGIN, RIGHT, UL, UP, WHITE, AnimationGrou
                    RoundedRectangle, Scene, ShowPassingFlash, Square, Text, VGroup, Write,
                    config)
 
-# ---------------- config ----------------
 TITULO = "Centroide de un árbol"
 SUBTITULO = "Proyecto 2 - CS2023 Algoritmos y Estructuras de Datos"
 CICLO = "UTEC, 2026-2"
 AUTORES = ["Estefano Zárate"]
 PROFESOR = "Luciano A. Romero Calla"
-LOGO = Path(__file__).resolve().parent / "assets" / "UTEC_Logo.png"  # opcional
+LOGO = Path(__file__).resolve().parent / "assets" / "UTEC_Logo.png"
 
-# árbol de ejemplo, nodos 1..N. con raíz 1 el algoritmo baja 1 -> 2 -> 4
 N = 13
 ARISTAS = [(1, 2), (1, 3), (2, 4), (2, 5), (4, 6), (4, 7), (4, 8),
            (5, 9), (6, 10), (7, 11), (8, 12), (8, 13)]
 RAIZ = 1
-NODOS_A_EXPLICAR = [1, 4]  # uno que NO es centroide y uno que sí
+NODOS_A_EXPLICAR = [1, 4]
 
-# para el juego del inicio y los casos de borde
-ESCONDIDO = 9  # el nodo que "escondo" en el juego
+ESCONDIDO = 9
 ARISTAS_DOS_CENTROIDES = [(1, 2), (2, 3), (2, 4), (2, 5), (5, 6), (5, 7), (7, 8)]
 N_CAMINO = 11
-TAMANOS_MEDICION = [10, 100, 1000]  # tamaños para comparar pasos
+TAMANOS_MEDICION = [10, 100, 1000]
 
 FUENTE = "Helvetica Neue" if sys.platform == "darwin" else ""
 
@@ -42,19 +39,18 @@ TEXTO_SUAVE = "#9AA3B2"
 NODO = "#2B3A55"
 NODO_BORDE = "#D8DEE9"
 ARISTA = "#7B8494"
-ACENTO = "#FFD166"   # amarillo, lo que se está procesando
-OK = "#06D6A0"       # verde, cumple / centroide
-MAL = "#EF476F"      # rojo, no cumple
-LISTO = "#3A86FF"    # azul, ya tiene su sz
-ARRIBA = "#9B5DE5"   # morado, el pedazo de arriba (el del padre)
-PESADO = "#FF9F1C"   # naranja, subárbol del hijo más pesado
+ACENTO = "#FFD166"
+OK = "#06D6A0"
+MAL = "#EF476F"
+LISTO = "#3A86FF"
+ARRIBA = "#9B5DE5"
+PESADO = "#FF9F1C"
 COLORES_COMPONENTES = ["#3A86FF", "#FF9F1C", "#9B5DE5", "#F15BB5", "#00BBF9", "#C9ADA7"]
 COLORES_NIVELES = [OK, LISTO, PESADO, ARRIBA, "#F15BB5"]
 
 config.background_color = FONDO
 
 
-# ---------------- algoritmo ----------------
 def construir_adyacencia(n, aristas):
     if n > 0 and len(aristas) != n - 1:
         raise ValueError(f"un árbol de {n} nodos tiene {n - 1} aristas, no {len(aristas)}")
@@ -70,9 +66,6 @@ def construir_adyacencia(n, aristas):
 
 
 def componentes_al_quitar(n, ady, v, dentro=None, contador=None):
-    # pedazos que quedan si quito v (BFS desde cada vecino), O(n)
-    # dentro: si lo paso, solo cuenta esos nodos
-    # contador: para contar pasos, lo uso en la parte de complejidad
     visto = [False] * (n + 1)
     if dentro is not None:
         for u in range(1, n + 1):
@@ -98,8 +91,6 @@ def componentes_al_quitar(n, ady, v, dentro=None, contador=None):
 
 
 def encontrar_centroides(n, aristas, raiz=1, explicar=(), contador=None):
-    # encuentra el/los centroides en O(n) y guarda los eventos para animarlos
-    # contador = vecinos revisados en el DFS + hijos revisados en la bajada
     ady = construir_adyacencia(n, aristas)
     eventos = []
     datos = {"n": n, "raiz": raiz, "aristas": list(aristas), "eventos": eventos}
@@ -114,9 +105,8 @@ def encontrar_centroides(n, aristas, raiz=1, explicar=(), contador=None):
     orden = []
     hijos = [[] for _ in range(n + 1)]
 
-    # paso 1: DFS con pila (con recursión python se cae en caminos largos)
     eventos.append({"tipo": "fase", "fase": 1, "raiz": raiz})
-    pila = []  # cada cosa es [nodo, siguiente vecino a revisar]
+    pila = []
 
     def entrar(v, p):
         padre[v] = p
@@ -131,7 +121,7 @@ def encontrar_centroides(n, aristas, raiz=1, explicar=(), contador=None):
         v, i = pila[-1]
         if i < len(ady[v]):
             if contador is not None:
-                contador["pasos"] += 1  # reviso un vecino
+                contador["pasos"] += 1
             pila[-1][1] += 1
             w = ady[v][i]
             if w == padre[v]:
@@ -148,19 +138,18 @@ def encontrar_centroides(n, aristas, raiz=1, explicar=(), contador=None):
     if len(orden) != n:
         raise ValueError("el grafo no es conexo: no es un árbol")
 
-    def subarbol(c):  # en preorden el subárbol de c queda todo seguido
+    def subarbol(c):
         return orden[pos[c]:pos[c] + sz[c]]
 
     def fuera_del_subarbol(c):
         return orden[:pos[c]] + orden[pos[c] + sz[c]:]
 
-    # paso 2: bajar al hijo con sz > n/2 mientras haya uno
     n_medios = f"{n // 2}.5" if n % 2 else f"{n // 2}"
     eventos.append({"tipo": "fase", "fase": 2, "raiz": raiz, "n": n, "n_medios": n_medios})
     v = raiz
     while True:
         if contador is not None:
-            contador["pasos"] += len(hijos[v])  # reviso los hijos de v
+            contador["pasos"] += len(hijos[v])
         pesado = max(hijos[v], key=lambda c: sz[c], default=0)
         sz_pesado = sz[pesado] if pesado else 0
         arriba = n - sz[v]
@@ -178,10 +167,9 @@ def encontrar_centroides(n, aristas, raiz=1, explicar=(), contador=None):
         eventos.append({"tipo": "mover", "de": v, "a": pesado})
         v = pesado
 
-    # si paré es porque ningún hijo pasa de n/2 y arriba tampoco => v es centroide
     centroides = [v]
     eventos.append({"tipo": "centroide", "v": v, "segundo": False})
-    for c in hijos[v]:  # si un hijo tiene justo n/2 también es centroide
+    for c in hijos[v]:
         if 2 * sz[c] == n:
             centroides.append(c)
             eventos.append({"tipo": "centroide", "v": c, "segundo": True})
@@ -202,7 +190,6 @@ def encontrar_centroides(n, aristas, raiz=1, explicar=(), contador=None):
 
 
 def centroides_fuerza_bruta(n, aristas, contador=None):
-    # la forma lenta O(n^2): quitar cada nodo y medir. solo para comparar
     ady = construir_adyacencia(n, aristas)
     resultado = []
     for v in range(1, n + 1):
@@ -214,7 +201,6 @@ def centroides_fuerza_bruta(n, aristas, contador=None):
 
 
 def centroide_de(nodos, aristas):
-    # centroide de un grupo de nodos: los renumero 1..k y llamo al algoritmo
     nodos = sorted(nodos)
     indice = {v: i + 1 for i, v in enumerate(nodos)}
     sub = [(indice[u], indice[v]) for u, v in aristas if u in indice and v in indice]
@@ -222,8 +208,6 @@ def centroide_de(nodos, aristas):
 
 
 def jugar_nodo_escondido(n, aristas, escondido):
-    # el juego del nodo escondido: siempre pregunto por el centroide de lo que queda.
-    # la respuesta me dice para qué lado ir y me quedo con ese pedazo (<= la mitad)
     ady = construir_adyacencia(n, aristas)
     candidatos = set(range(1, n + 1))
     jugadas = []
@@ -243,7 +227,6 @@ def jugar_nodo_escondido(n, aristas, escondido):
 
 
 def descomposicion_centroides(n, aristas):
-    # nivel de cada nodo en la descomposición (0 = centroide de todo el árbol)
     ady = construir_adyacencia(n, aristas)
     nivel = {}
     pendientes = [(set(range(1, n + 1)), 0)]
@@ -257,7 +240,6 @@ def descomposicion_centroides(n, aristas):
 
 
 def arbol_aleatorio(n, semilla):
-    # árbol random pero siempre igual con la misma semilla: i se cuelga de alguno anterior
     import random
     rng = random.Random(semilla)
     return [(i, rng.randint(1, i - 1)) for i in range(2, n + 1)]
@@ -267,7 +249,6 @@ def camino(n):
     return [(i, i + 1) for i in range(1, n)]
 
 
-# ---------------- dibujo del árbol ----------------
 class ArbolVisual(VGroup):
     def __init__(self, datos, centro=(0, 0, 0), ancho=7.0, alto=4.6, radio=0.3,
                  posiciones=None):
@@ -296,7 +277,6 @@ class ArbolVisual(VGroup):
 
     @staticmethod
     def _calcular_posiciones(hijos, raiz, ancho, alto, centro):
-        # las hojas van en columnas seguidas y cada papá queda al medio de sus hijos
         if raiz < 1:
             return {}
         x, prof = {}, {}
@@ -345,7 +325,6 @@ class ArbolVisual(VGroup):
         return anims
 
 
-# ---------------- textos y layout ----------------
 CENTRO_ARBOL = np.array([-2.75, -0.15, 0])
 ANCHO_ARBOL, ALTO_ARBOL = 7.0, 4.5
 ESQUINA_PANEL = np.array([2.35, 2.55, 0])
@@ -366,7 +345,6 @@ def ajustar_ancho(mob, maximo):
 
 
 def reemplazar(viejo, nuevo, desplazamiento=0.12 * UP):
-    # sale el texto viejo y después entra el nuevo (si no se enciman)
     anims = []
     if viejo is not None:
         anims.append(FadeOut(viejo, shift=desplazamiento))
@@ -397,7 +375,6 @@ def fila_pila(pila):
 
 
 class Narrador:
-    # título arriba a la izquierda y subtítulo abajo
 
     def __init__(self):
         self._titulo = None
@@ -423,7 +400,6 @@ class Narrador:
 
 
 class Panel:
-    # panel de la derecha: cabecera fija + cuerpo que voy cambiando
 
     def __init__(self):
         self.cabecera = VGroup()
@@ -474,9 +450,7 @@ class Panel:
         return anims
 
 
-# ---------------- escenas ----------------
 class EscenaCentroide:
-    # todas las secciones del video, Avance las junta con Scene
 
     def preparar(self):
         self.datos = encontrar_centroides(N, ARISTAS, RAIZ, NODOS_A_EXPLICAR)
@@ -495,9 +469,7 @@ class EscenaCentroide:
             run_time=2,
         )
 
-    # ---------------------------------------------------------------- título
     def logo(self):
-        # el png tiene fondo blanco, así que lo pongo sobre una tarjeta blanca
         if not LOGO.exists():
             return None
         imagen = ImageMobject(str(LOGO)).set_height(0.7)
@@ -531,7 +503,6 @@ class EscenaCentroide:
         self.wait(2)
         self.play(FadeOut(bloque), run_time=0.8)
 
-    # ------------------------------------------------------------ definición
     def seccion_definicion(self):
         self.play(*self.narrador.anim_titulo("Parte 2. ¿Qué es un centroide?"))
         self.crear_arbol()
@@ -603,7 +574,6 @@ class EscenaCentroide:
         self.wait(espera)
         self.play(*a.anim_restaurar(), *self.panel.anim_cuerpo([]), run_time=0.8)
 
-    # ---------------------------------------------------------- demostración
     def seccion_demo(self):
         if self.arbol is None:
             self.crear_arbol()
@@ -737,9 +707,7 @@ class EscenaCentroide:
                   *self.narrador.anim_decir(frase, {"centroide": OK}), run_time=1.0)
         self.wait(1.6)
 
-    # ------------------------------------------------------------ motivación
     def atenuar(self, nodos, arbol=None):
-        # apaga los nodos descartados y sus aristas
         a = arbol or self.arbol
         nodos = set(nodos)
         anims = []
@@ -766,7 +734,6 @@ class EscenaCentroide:
             {"«es ese»": OK}))
         self.wait(2.5)
 
-        # forma mala: preguntar por hojas, descarta de a uno
         self.play(*self.narrador.anim_decir(
             f"Si preguntas por las hojas, descartas de a uno... hasta {N - 1} preguntas",
             {f"{N - 1} preguntas": MAL}))
@@ -776,7 +743,6 @@ class EscenaCentroide:
             {"en mitades": ACENTO}))
         self.wait(1.2)
 
-        # forma buena: preguntar por el centroide de lo que queda
         cursor = Circle(radius=a.radio + 0.13, color=ACENTO, stroke_width=6)
         historial = [str(N)]
         for k, j in enumerate(jugadas, 1):
@@ -817,11 +783,9 @@ class EscenaCentroide:
                   run_time=1)
         self.arbol = None
 
-    # -------------------------------------------------------- casos de borde
     def seccion_bordes(self):
         self.play(*self.narrador.anim_titulo("Parte 4. Casos de borde"))
 
-        # caso 1: n par, dos centroides
         d = encontrar_centroides(len(ARISTAS_DOS_CENTROIDES) + 1, ARISTAS_DOS_CENTROIDES,
                                  1, explicar=[2, 5])
         a = ArbolVisual(d, CENTRO_ARBOL, 5.5, 3.6)
@@ -835,7 +799,6 @@ class EscenaCentroide:
             run_time=1.8)
         self.wait(0.8)
 
-        # las dos mitades que deja la arista entre los dos centroides
         primero = next(e["v"] for e in d["eventos"] if e["tipo"] == "centroide" and not e["segundo"])
         segundo = next(e["v"] for e in d["eventos"] if e["tipo"] == "centroide" and e["segundo"])
         quitar = {e["v"]: e for e in d["explicaciones"]}
@@ -866,7 +829,6 @@ class EscenaCentroide:
         self.wait(3)
         self.play(FadeOut(a), *self.panel.anim_limpiar(), run_time=0.8)
 
-        # caso 2: camino, lo más profundo posible para el DFS
         n = N_CAMINO
         d = encontrar_centroides(n, camino(n))
         xs = np.linspace(-5.5, 5.5, n)
@@ -906,9 +868,7 @@ class EscenaCentroide:
         self.play(FadeOut(a), FadeOut(pila_mob), FadeOut(info), *self.narrador.anim_limpiar(),
                   run_time=0.8)
 
-    # ----------------------------------------------------------- complejidad
     def seccion_complejidad(self):
-        # corro las dos versiones en árboles random y cuento pasos
         medidas = []
         for n in TAMANOS_MEDICION:
             aristas = arbol_aleatorio(n, 2026)
@@ -932,7 +892,6 @@ class EscenaCentroide:
             fila = VGroup(T(texto, 26), T("→ " + cota, 26, color, weight=BOLD))
             fila.arrange(RIGHT, buff=0.25)
             filas.add(fila)
-        # misma escala para todas, así entra la más larga
         factor = min(1.0, 12.8 / max(f.width for f in filas))
         for fila in filas:
             fila.scale(factor)
@@ -973,7 +932,6 @@ class EscenaCentroide:
         self.play(FadeOut(filas), FadeOut(cabecera), FadeOut(regla), FadeOut(cuerpo),
                   FadeOut(nota), *self.narrador.anim_limpiar(), run_time=0.8)
 
-    # ---------------------------------------------------------------- cierre
     def seccion_cierre(self):
         nivel = descomposicion_centroides(N, ARISTAS)
         niveles = max(nivel.values()) + 1
@@ -1002,7 +960,6 @@ class EscenaCentroide:
                   run_time=1)
         self.arbol = None
 
-        # créditos
         referencias = VGroup(*[T(r, 22, TEXTO_SUAVE) for r in (
             "C. Jordan (1869). Sur les assemblages de lignes",
             "USACO Guide: Centroid Decomposition",
@@ -1025,7 +982,6 @@ class EscenaCentroide:
 
 
 class Centroide(EscenaCentroide, Scene):
-    # el video completo
 
     def construct(self):
         self.preparar()
