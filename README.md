@@ -54,6 +54,12 @@ manim -qk centroide.py
 ```
 ![Compilacion 1080p60](assets/compilando_4k.png)
 
+### Agrandole la voz en off con bash scripting 
+```bash
+bash agregar_voz.sh media/videos/centroide/2160p60/Centroide.mp4
+```
+![Compilacion 1080p60](assets/voz_en_off.png)
+
 
 ### Ruta de destino del video final compilado en 1080 y 4k una vez compilados
 `/media/videos/avance/480p15 Avance.mp4` 
