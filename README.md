@@ -59,8 +59,7 @@ manim -qk centroide.py
 `/media/videos/avance/480p15 Avance.mp4` 
 ![Compilacion 1080p60](assets/path_videos.png)
 
-### Enlace Google Drive
-[Google Drive](https://drive.google.com/drive/u/1/folders/1kq5q-x9SgnoZ_4p1PYKdoprF2lasUrGo)
+### Enlace [Google Drive](https://drive.google.com/drive/u/1/folders/1kq5q-x9SgnoZ_4p1PYKdoprF2lasUrGo)
 
 
 
