@@ -41,10 +41,24 @@ manim -pql avance.py
 ```
 ![Compilacion 1080p60](assets/compilando_video.png)
 
+### Compilando el video final en el script centroide.py
+#### Compilando en la version 1080p60 y pesa 15.8MB
+```bash
+manim -qh centroide.py
+```
+![Compilacion 1080p60](assets/compilando_1080p60.png)
 
-### Ruta de destino del video una vez compilado
+#### Compilando en la version 4K y pesa 30MB
+```bash
+manim -qk centroide.py	
+```
+![Compilacion 1080p60](assets/compilando_4k.png)
+
+
+### Ruta de destino del video final compilado en 1080 y 4k una vez compilados
 `/media/videos/avance/480p15 Avance.mp4` 
-![Compilacion 1080p60](assets/video_renderizado.png)
+
+![Compilacion 1080p60](assets/path_videos.png)
 
 
 
