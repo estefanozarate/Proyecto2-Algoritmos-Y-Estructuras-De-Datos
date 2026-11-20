@@ -2,5 +2,4 @@ venv/
 __pycache__/
 .DS_Store
 media/texts/
-media/avance/480p15/
 media/**/partial_movie_files/

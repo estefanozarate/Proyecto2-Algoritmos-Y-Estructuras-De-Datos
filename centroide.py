@@ -1024,7 +1024,7 @@ class EscenaCentroide:
         self.play(FadeOut(creditos), run_time=1)
 
 
-class Avance(EscenaCentroide, Scene):
+class Centroide(EscenaCentroide, Scene):
     # el video completo
 
     def construct(self):
